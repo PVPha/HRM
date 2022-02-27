@@ -1,0 +1,155 @@
+<div class="container">
+  <h1 mat-dialog-title>Chi tiết khóa đào tạo</h1>
+  <form class="form formDialog">
+    <div class="row justify-content-center">
+      <div class="col-3">
+        <mat-form-field>
+          <mat-label>Mã khóa đào tạo</mat-label>
+          <input matInput value="{{ data.id_training }}" #id_training />
+        </mat-form-field>
+      </div>
+      <div class="col-3">
+        <mat-form-field>
+          <mat-label>Tên khóa đào tạo</mat-label>
+          <input matInput value="{{ data.name }}" #name />
+        </mat-form-field>
+      </div>
+    </div>
+    <div class="row justify-content-center">
+      <div class="col-6">
+        <mat-form-field>
+          <mat-label>Thời gian đào tạo</mat-label>
+          <input
+            matInput
+            *ngIf="range.value.start == null"
+            type="text"
+            [value]="data.time"
+          />
+          <mat-date-range-input
+            [hidden]="range.value.start == null"
+            [formGroup]="range"
+            [rangePicker]="rangepicker"
+          >
+            <input
+              matStartDate
+              formControlName="start"
+              placeholder="Start date"
+            />
+            <input matEndDate formControlName="end" placeholder="End date" />
+            <input
+              style="display: none"
+              type="text"
+              value="{{
+                range.value.start !== null
+                  ? (range.value.start | date: 'dd-MM-yyyy')
+                  : time[0]
+              }}"
+              #timeStart
+            />
+            <input
+              style="display: none"
+              type="text"
+              value="{{
+                range.value.end !== null
+                  ? (range.value.end | date: 'dd-MM-yyyy')
+                  : time[1]
+              }}"
+              #timeEnd
+            />
+          </mat-date-range-input>
+          <mat-datepicker-toggle
+            matSuffix
+            [for]="rangepicker"
+          ></mat-datepicker-toggle>
+          <mat-date-range-picker #rangepicker></mat-date-range-picker>
+        </mat-form-field>
+      </div>
+    </div>
+    <div class="row justify-content-center">
+      <div class="col-6">
+        <mat-form-field>
+          <mat-label>Địa điểm</mat-label>
+          <input matInput value="{{ data.location }}" #location />
+        </mat-form-field>
+      </div>
+    </div>
+    <div class="row justify-content-center">
+      <div class="col-6">
+        <mat-form-field>
+          <mat-label>Người đào tạo</mat-label>
+          <input matInput value="{{ data.trainers }}" #trainers />
+        </mat-form-field>
+      </div>
+    </div>
+    <div class="row justify-content-center">
+      <div class="col">
+        <mat-expansion-panel
+          hideToggle
+          onclick="setContent('training', 'editorTraining')"
+        >
+          <mat-expansion-panel-header>
+            <mat-panel-title> Nội dung </mat-panel-title>
+            <mat-panel-description>
+              nội dung chi tiết khóa đào tạo
+            </mat-panel-description>
+          </mat-expansion-panel-header>
+          <!-- <app-view-interview-schedule></app-view-interview-schedule> -->
+          <!-- <textarea name="" id="contract"  rows="20" matInput > -->
+          <textarea
+            style="display: none"
+            id="trainingTextArea"
+            value="{{ data.content }}"
+            #content
+          ></textarea>
+          <div
+            id="training"
+            style="display: none"
+            [innerHTML]="data.content"
+          ></div>
+          <editor
+            id="editorTraining"
+            onmouseout=" setTimeout(getContent('trainingTextArea'),10000)"
+            [init]="{
+              height: 200,
+              menubar: false,
+              plugins: [
+                'advlist autolink lists link image charmap print preview anchor',
+                'searchreplace visualblocks code fullscreen',
+                'insertdatetime media table paste code help wordcount'
+              ],
+              toolbar:
+                'undo redo | formatselect | bold italic backcolor | \
+              alignleft aligncenter alignright alignjustify | \
+              bullist numlist outdent indent | removeformat | help'
+            }"
+          >
+          </editor>
+          <!-- </textarea> -->
+        </mat-expansion-panel>
+      </div>
+    </div>
+    <div class="row">
+      <div class="ml-auto mr-auto">
+        <button
+          type="submit"
+          class="btnForm btn btn-primary mt-3 mb-5"
+          (click)="
+            onSubmit(
+              id_training.value,
+              name.value,
+              timeStart.value,
+              timeEnd.value,
+              location.value,
+              trainers.value,
+              content.value
+            )
+          "
+          [routerLink]="['/view-training']"
+          routerLinkActive="router-link-active"
+        >
+          Thêm
+        </button>
+      </div>
+    </div>
+  </form>
+</div>
